@@ -6,8 +6,13 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract powerToken is ERC20, Ownable {
-    constructor() ERC20("PowerToken", "PWR") {
-        _mint(msg.sender, 1000000 * 10 ** decimals());
+    constructor() ERC20(address initialOwner) {
+        ERC20("PowerToken", "PWR");
+        Ownable(initialOwner);
+    }
+
+    function mint(address to, uint256 amount) public onlyOwner {
+        _mint(to, amount);
     }
 }
     
