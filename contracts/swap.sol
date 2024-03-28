@@ -19,6 +19,8 @@ pragma solidity =0.8.19;
 *contracts
 */
 
+//Battery structure to maaintain the state of the battery: id, percent, lastUser, location (vehicle, batterystation)
+
 contract swap {
   /*Order Layout for contract:
   *Type declarations
