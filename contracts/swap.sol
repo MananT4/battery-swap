@@ -33,18 +33,22 @@ contract swap {
   */
 
   powerToken public token;
-  address tokenAddress;
   address payable public owner;
   address payable contractAddress;
   uint256 public tokenPrice = 4; //4 wei per token
-  uint256 public tokenSupply;
+  uint256 public tokenSupply; //Keeps track of total tokens in circulation
 
 
-  constructor(address tokenAddress) payable {
+  constructor(address _tokenAddress) payable {
     owner = payable(msg.sender);
     contractAddress = payable(address(this));
-    token = powerToken(tokenAddress); //Deploy the contract with the token's address
+    token = powerToken(_tokenAddress); //Deploy the contract with the token's address
     token.transferOwnership(address(this)); //Transfer ownership of the token to this contract
+  }
+
+  //Receive function to accept ether
+  receive() external payable {
+    //Emit an event to log the amount of ether received
   }
 
   //Function to buy tokens
@@ -54,16 +58,20 @@ contract swap {
     //Ensure user has enough balance to buy tokens
     require(msg.value < msg.sender.balance, "Insufficient balance to buy tokens");
     uint256 amount = msg.value;
-    uint256 tokens = amount / tokenPrice; //Calculate the number of tokens to transfer
-    tokenSupply += tokens; //Increase token supply  
-    token.transfer(msg.sender, tokens); //Transfer tokens to user
+    uint256 tokens = amount / tokenPrice; //Calculate the number of tokens to transfer 
+    token.mint(msg.sender, tokens); //Transfer tokens to user
+    tokenSupply += tokens; //Increase token supply 
   }
 
-  //Funtion to spend tokens
-  function spendTokens(uint256 tokens) public {
+  //Funtion to spend tokens to use the battery swap service
+  function spendTokens(uint256 _tokens) public {
     //Ensure user has enough tokens to spend
-    require(token.balanceOf(msg.sender) >= tokens, "Insufficient tokens to spend");
-    tokenSupply -= tokens; //Decrease token supply
-    token.transferFrom(msg.sender, contractAddress, tokens); //Transfer tokens to contract
+    require(token.balanceOf(msg.sender) >= _tokens, "Insufficient tokens to spend");
+    token.transfer(contractAddress, _tokens); //Transfer tokens to contract
+
+    //Perform battery swap service
+
+    token.burn(contractAddress, _tokens); //Burn tokens
+    tokenSupply -= _tokens; //Decrease token supply
   }
 }
