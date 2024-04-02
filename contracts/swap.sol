@@ -36,7 +36,6 @@ contract swap {
   address payable public owner;
   address payable contractAddress;
   uint256 public tokenPrice = 4; //4 wei per token
-  uint256 public tokenSupply; //Keeps track of total tokens in circulation
 
 
   constructor(address _tokenAddress) payable {
@@ -54,13 +53,19 @@ contract swap {
   //Function to buy tokens
   function buyTokens() public payable {
     //Ensure user can buy at least one token
-    require(msg.value > tokenPrice, "A minimum of 4 wei is required to buy one token");
+    require(msg.value > tokenPrice * 100, "A minimum of 400 wei is required to buy a minimum of 100 tokens");
     //Ensure user has enough balance to buy tokens
-    require(msg.value < msg.sender.balance, "Insufficient balance to buy tokens");
+    require(msg.value < msg.sender.balance, "Insufficient ETH balance to buy tokens");
     uint256 amount = msg.value;
     uint256 tokens = amount / tokenPrice; //Calculate the number of tokens to transfer 
+    uint256 cost = tokens * tokenPrice; //Calculate the cost of the tokens
+    uint256 refund = amount - cost; //Calculate the refund amount
     token.mint(msg.sender, tokens); //Transfer tokens to user
-    tokenSupply += tokens; //Increase token supply 
+
+    //Refund the user if they overpaid
+    if (refund > 0) {
+      payable(msg.sender).transfer(refund);
+    }
   }
 
   //Funtion to spend tokens to use the battery swap service
@@ -71,7 +76,6 @@ contract swap {
 
     //Perform battery swap service
 
-    token.burn(contractAddress, _tokens); //Burn tokens
-    tokenSupply -= _tokens; //Decrease token supply
+    token.burn(contractAddress, _tokens); //Burn tokens from contract
   }
 }
