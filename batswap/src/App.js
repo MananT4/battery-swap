@@ -38,9 +38,9 @@ function App() {
 
       <section className="section">
         <div className="container">
-          <h2 className="title is-4">Available Stations and Batteries</h2>
+          <h2 className="title is-4">Closest Available Stations and Batteries</h2>
           <div className="columns is-multiline">
-            {/* Example column for Station 1 */}
+            {/* Column for Station 1 */}
             <div className="column is-one-third">
               <div className="box">
                 <p className="title is-5">Station 1</p>
@@ -61,12 +61,75 @@ function App() {
                       <td>2</td>
                       <td>80%</td>
                     </tr>
+                    <tr>
+                      <td>3</td>
+                      <td>78%</td>
+                    </tr>
                     {/* Add more batteries as needed */}
                   </tbody>
                 </table>
               </div>
             </div>
-            {/* Repeat for other stations */}
+            {/* Column for Station 2 */}
+            <div className="column is-one-third">
+              <div className="box">
+                <p className="title is-5">Station 2</p>
+                <table className="table is-fullwidth is-striped">
+                  <thead>
+                    <tr>
+                      <th>Battery ID</th>
+                      <th>Charge Level</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* Placeholder for dynamic content */}
+                    <tr>
+                      <td>1</td>
+                      <td>95%</td>
+                    </tr>
+                    <tr>
+                      <td>2</td>
+                      <td>80%</td>
+                    </tr>
+                    <tr>
+                      <td>3</td>
+                      <td>76%</td>
+                    </tr>
+                    {/* Add more batteries as needed */}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            {/* Column for Station 3 */}
+            <div className="column is-one-third">
+              <div className="box">
+                <p className="title is-5">Station 3</p>
+                <table className="table is-fullwidth is-striped">
+                  <thead>
+                    <tr>
+                      <th>Battery ID</th>
+                      <th>Charge Level</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* Placeholder for dynamic content */}
+                    <tr>
+                      <td>1</td>
+                      <td>95%</td>
+                    </tr>
+                    <tr>
+                      <td>2</td>
+                      <td>80%</td>
+                    </tr>
+                    <tr>
+                      <td>3</td>
+                      <td>70%</td>
+                    </tr>
+                    {/* Add more batteries as needed */}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
       </section>
