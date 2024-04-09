@@ -1,13 +1,13 @@
 //SPDX-License-Identifier: MIT
-pragma solidity <=0.8.19;
+pragma solidity <=0.8.21;
 
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract powerToken is ERC20, Ownable {
-    constructor(address _initialOwner) ERC20("PowerToken", "PWR") {
-        Ownable(_initialOwner);
+    constructor() ERC20("PowerToken", "PWR") {
+        Ownable(msg.sender);
     }
 
     function mint(address _to, uint256 _amount) public onlyOwner {
