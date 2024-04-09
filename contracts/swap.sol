@@ -174,4 +174,13 @@ contract swap {
     batteryStationMap[_stationId].batteries[_batteryId] = batteryMap[_batteryId]; //Add battery to battery station
     delete batteryMap[_batteryId]; //Remove battery from vehicle
   }
+
+  //Function to let contract owner to withdraw ether
+  function withdraw() public ownerOnly {
+    uint128 amount = address(this).balance;
+    require(amount > 0, "No Ether left to withdraw");
+
+    (bool success, ) = msg.sender.call{value: amount}("");
+    require(success, "Failed to send Ether");
+  }
 }
