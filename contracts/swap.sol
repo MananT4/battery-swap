@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity <=0.8.21;
+pragma solidity 0.8.19;
 
 import "./powerToken.sol";
 /*Function Paramter Variables: _variableName
@@ -135,7 +135,7 @@ contract swap {
 
   //Add a battery station
   function addBatteryStation(uint256 _id) public ownerOnly {
-    batteryStationMap[_id] = batteryStation(_id);
+    //batteryStationMap[_id] = batteryStation(_id);
   }
 
   //Remove a battery station
@@ -177,7 +177,7 @@ contract swap {
 
   //Function to let contract owner to withdraw ether
   function withdraw() public ownerOnly {
-    uint128 amount = address(this).balance;
+    uint amount = address(this).balance;
     require(amount > 0, "No Ether left to withdraw");
 
     (bool success, ) = msg.sender.call{value: amount}("");
