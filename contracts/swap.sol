@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.19;
+pragma solidity <=0.8.19;
 
 import "./powerToken.sol";
 /*Function Paramter Variables: _variableName
@@ -36,6 +36,7 @@ contract swap {
   address payable public owner;
   address payable contractAddress;
   uint256 public tokenPrice = 4; //4 wei per token
+  bool internal reentrancyLock = false;
 
   //Battery structure to maintain the state of the battery
   struct battery {
@@ -70,13 +71,21 @@ contract swap {
     _;
   }
 
+  //Modifier for reentrancy guard
+  modifier reentrancyGuard() {
+    require(!reentrancyLock, "Reentrancy guard");
+    reentrancyLock = true;
+    _;
+    reentrancyLock = false;
+  }
+
   //Receive function to accept ether
   receive() external payable {
     //Emit an event to log the amount of ether received
   }
 
   //Function to buy tokens
-  function buyTokens() public payable {
+  function buyTokens() public payable reentrancyGuard() {
     //Ensure user can buy at least one token
     require(msg.value > tokenPrice * 100, "A minimum of 400 wei is required to buy a minimum of 100 tokens");
     //Ensure user has enough balance to buy tokens
@@ -94,7 +103,7 @@ contract swap {
   }
 
   //Funtion to spend tokens to use the battery swap service
-  function spendTokens(uint256 _tokens) public {
+  function spendTokens(uint256 _tokens) public reentrancyGuard() {
     //Ensure user has enough tokens to spend
     require(token.balanceOf(msg.sender) >= _tokens, "Insufficient tokens to spend");
     token.transfer(contractAddress, _tokens); //Transfer tokens to contract
