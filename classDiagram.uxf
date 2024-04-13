@@ -1,34 +1,57 @@
-<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>190</x><y>120</y><w>400</w><h>140</h></coordinates><panel_attributes>BatterySwap Contract
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>50</x><y>50</y><w>360</w><h>220</h></coordinates><panel_attributes>Swap
+fontsize=14
 --
-address owner
-unit256 tokenPrice
+-- swapOwner: address
+-- token: powerToken
+-- tokenPrice: uint256
+-- batteryMap: Map&lt;uint256, battery&gt;
+-- userBattery: Map&lt;address, battery&gt;
+-- userStates: Map&lt;address, uint256&gt;
 --
-buyToken(buyer: address, ethAmount: unit256)
-spendToken(user : address, tokenAmount : unit256)
-depositBattery(batteryid : unit256, user : address)
-withdrawBattery(batteryid : unit256, user : address)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>210</x><y>310</y><w>360</w><h>120</h></coordinates><panel_attributes>User
+-&gt; buyTokens (): void
+-&gt; depositTokens( ): void
+-&gt; depositBattery (batId: uint256): void
+-&gt; collectBattery (batId: uint256): void
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>590</x><y>70</y><w>360</w><h>80</h></coordinates><panel_attributes>PowerToken
+fontsize=14
 --
-address userAddress
-unit256 tokenBalance
 --
-buyToken(ethAmount: unit256)
-spendToken(tokenAmount : unit256, batteryid: unit256)
-
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>380</x><y>250</y><w>30</w><h>80</h></coordinates><panel_attributes>lt=-</panel_attributes><additional_attributes>10;60;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>650</x><y>310</y><w>360</w><h>120</h></coordinates><panel_attributes>BatteryStation
+-&gt; mint (account: address, amount: uint256)
+-&gt; burn (account: address, amount: uint256)
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>30</x><y>510</y><w>360</w><h>80</h></coordinates><panel_attributes>Ownable
+fontsize=14
 --
-unit 256 stationID
-address[] batteries
+-- owner: address
 --
-depositBattery(batteryid : unit256, user : address)
-withdrawBattery(batteryid : unit256, user : address)
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>420</x><y>480</y><w>360</w><h>140</h></coordinates><panel_attributes>Battery
+-&gt; transferOwnership (newOwner: address): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>560</x><y>310</y><w>540</w><h>150</h></coordinates><panel_attributes>ERC20
+fontsize=14
 --
-unit256 id
-unit percentChange
-address lastUser
-string location
 --
-updateLastUser(newUser : address)
-updateLocation(newLocation : string)
+-&gt; totalSupply (): uint256
+-&gt; balanceOf (account: address): uint256
+-&gt; transfer (recipient: address, amount: uint256): bool
+-&gt; approve(spender: address, amount: 256): bool
+-&gt; transferFrom (sender: address, recipient: address, amount: uint256): bool
+-&gt; allowance (owner: address, spender: address): uint256
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>400</x><y>110</y><w>210</w><h>30</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>190;10;10;10</additional_attributes></element><element><id>Text</id><coordinates><x>450</x><y>120</y><w>50</w><h>20</h></coordinates><panel_attributes>uses
+style=wordwrap
+fontsize=14</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>190</x><y>260</y><w>30</w><h>270</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;250;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>820</x><y>140</y><w>30</w><h>190</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;170;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>350</x><y>140</y><w>350</w><h>390</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;370;330;10</additional_attributes></element><element><id>Text</id><coordinates><x>210</x><y>370</y><w>70</w><h>20</h></coordinates><panel_attributes>inherits
+style=wordwrap
+fontsize=14</panel_attributes><additional_attributes></additional_attributes></element><element><id>Text</id><coordinates><x>460</x><y>390</y><w>70</w><h>20</h></coordinates><panel_attributes>inherits
+style=wordwrap
+fontsize=14</panel_attributes><additional_attributes></additional_attributes></element><element><id>Text</id><coordinates><x>830</x><y>190</y><w>70</w><h>20</h></coordinates><panel_attributes>inherits
+style=wordwrap
+fontsize=14</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>560</x><y>560</y><w>540</w><h>150</h></coordinates><panel_attributes>lt=.
+IERC20
+fontsize=14
 --
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>380</x><y>420</y><w>140</w><h>80</h></coordinates><panel_attributes>lt=-</panel_attributes><additional_attributes>120;60;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>660</x><y>420</y><w>180</w><h>80</h></coordinates><panel_attributes>lt=-</panel_attributes><additional_attributes>10;60;160;10</additional_attributes></element></diagram>
+--
+-&gt; totalSupply (): uint256
+-&gt; balanceOf (account: address): uint256
+-&gt; transfer (recipient: address, amount: uint256): bool
+-&gt; approve(spender: address, amount: 256): bool
+-&gt; transferFrom (sender: address, recipient: address, amount: uint256): bool
+-&gt; allowance (owner: address, spender: address): uint256
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>820</x><y>450</y><w>30</w><h>130</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;110;10;10</additional_attributes></element><element><id>Text</id><coordinates><x>740</x><y>500</y><w>100</w><h>20</h></coordinates><panel_attributes>implements
+style=wordwrap
+fontsize=14</panel_attributes><additional_attributes></additional_attributes></element></diagram>
