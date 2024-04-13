@@ -56,6 +56,10 @@ contract swap is Ownable {
   //Event to log withdrawal of ETH by owner
   event Withdraw(address indexed owner, uint256 value);
 
+  //Event for recieve
+  event Received(address, uint);
+
+
   //Modifier ownerOnly to restrict access to the owner
   modifier ownerOnly() {
     require(msg.sender == swapOwner, "Only the owner can call this function");
@@ -80,6 +84,7 @@ contract swap is Ownable {
   //Receive function to accept ether
   receive() external payable {
     //Emit an event to log the amount of ether received
+    emit Received(msg.sender, msg.value);
   }
 
   //Function to buy tokens
