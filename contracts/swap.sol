@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 *One blank line before functions
 */
 
-//Use web3.js functions to interact with the contract: getAccount, getBalane, currentProvider, getBlock, getTransaction
+//Use web3.js functions to interact with the contract: getAccount, getBalance, currentProvider, getBlock, getTransaction
 
 
 /*Order Layout for sol file:
@@ -68,18 +68,32 @@ contract swap is Ownable {
 
   mapping (address => battery) public userBattery; //Mapping user to battery
 
-  //Constructor to deploy the contract with the token's address
-  //Transfer ownership of the token to this contract
-  constructor(address _tokenAddress) payable onlyOwner(){
-    swapOwner = payable(msg.sender); //Set the owner of the contract to the EOA that deployed the contract
-    contractAddress = payable(address(this));
-    token = powerToken(_tokenAddress); //Deploy the contract with the token's address
-  }
+  //Event to log the minting of tokens
+  event Mint(address indexed to, uint256 value);
+
+  //Event to log deposit of tokens
+  event Deposit(address indexed from, uint256 value);
+
+  //Event to log the deposit of battery
+  event BatteryDeposit(address indexed from, uint256 batId);
+
+  //Event to log the collection of battery
+  event BatteryCollect(address indexed from, uint256 batId);
+
+  //Event to log withdrawal of ETH by owner
+  event Withdraw(address indexed owner, uint256 value);
 
   //Modifier ownerOnly to restrict access to the owner
   modifier ownerOnly() {
     require(msg.sender == swapOwner, "Only the owner can call this function");
     _;
+  }
+
+  //Constructor to deploy the contract with the token's address
+  constructor(address _tokenAddress) payable onlyOwner(){
+    swapOwner = payable(msg.sender); //Set the owner of the contract to the EOA that deployed the contract
+    contractAddress = payable(address(this));
+    token = powerToken(_tokenAddress); //Deploy the contract with the token's address
   }
 
   //Modifier for reentrancy guard
@@ -106,6 +120,7 @@ contract swap is Ownable {
     uint256 cost = tokens * tokenPrice; //Calculate the cost of the tokens
     uint256 refund = amount - cost; //Calculate the refund amount
     token.mint(msg.sender, tokens); //Transfer tokens to user
+    emit Mint(msg.sender, tokens); //Emit an event to log the minting of tokens
 
     //Refund the user if they overpaid
     if (refund > 0) {
@@ -115,13 +130,15 @@ contract swap is Ownable {
 
   // Users deposit tokens to initiate the swap process
   function depositTokens(address _user) public reentrancyGuard(){
-    require(token.balanceOf(_user) >= 100, "Insufficient token balance");
+    require(getBalance(_user) >= 100, "Insufficient token balance");
     require(token.transferFrom(_user, contractAddress, 100), "Token transfer failed");
+    //require(token.transfer(contractAddress, 100), "Token transfer failed"); //Transfer tokens to contract
     userStates[_user] = userState.SPENT; //Update user state
+    emit Deposit(_user, 100); //Emit an event to log the deposit of tokens
   }
 
   //Function to deposit the battery
-  function depoistBattery(uint256 _batId, address _user) public reentrancyGuard(){
+  function depositBattery(uint256 _batId, address _user) public reentrancyGuard(){
     //Ensure battery ID belongs to the user
     require(userBattery[_user].id == _batId, "Battery is not in user's possession");
     //Ensure battery is in the vehicle
@@ -130,6 +147,10 @@ contract swap is Ownable {
     batteryMap[_batId].location = batLocation.STATION;
     //Update the user state
     userStates[_user] = userState.DEPOSITED;
+    //Remove the battery from the user
+    delete userBattery[_user];
+    //Emit an event to log the deposit of the battery
+    emit BatteryDeposit(_user, _batId);
   }
 
   // Once verified, the user can collect a charged battery
@@ -146,6 +167,8 @@ contract swap is Ownable {
     userStates[_user] = userState.COLLECTED;
     //Burn tokens from contract
     token.burn(contractAddress, 100);
+    //Emit an event to log the collection of the battery
+    emit BatteryCollect(_user, _batId);
   }
   
 
@@ -159,6 +182,11 @@ contract swap is Ownable {
     return token.totalSupply();
   }
 
+  //Approve the contract to spend tokens on user's behalf
+  function approveContract() public {
+    token.approve(address(this), getBalance(msg.sender));
+  }
+
   //Function to let contract owner to withdraw ether
   function withdraw() public ownerOnly {
     uint amount = address(this).balance;
@@ -166,6 +194,7 @@ contract swap is Ownable {
 
     (bool success, ) = msg.sender.call{value: amount}("");
     require(success, "Failed to send Ether");
+    emit Withdraw(msg.sender, amount); //Emit an event to log the withdrawal of ether
   }
 
   //Function to pass ownership of the token to the contract
@@ -175,7 +204,7 @@ contract swap is Ownable {
   }
 
   // Function to initialize the contract
-    function init(address[] calldata userAddresses) external onlyOwner {
+    function init(address[] calldata _userAddresses) external onlyOwner {
         require(!initialized, "Already initialized");
         initialized = true;
 
@@ -186,12 +215,10 @@ contract swap is Ownable {
         }
 
         // Create three batteries belonging to users
-        for (uint i = 0; i < userAddresses.length; i++) {
+        for (uint i = 0; i < _userAddresses.length; i++) {
             batteryMap[nextBatteryId] = battery(nextBatteryId, 20, batLocation.VEHICLE); // Assuming 20% charge
-            userBattery[userAddresses[i]] = batteryMap[nextBatteryId];
+            userBattery[_userAddresses[i]] = batteryMap[nextBatteryId];
             nextBatteryId++;
         }
-
-        // Any additional setup can be added here
     }
 }

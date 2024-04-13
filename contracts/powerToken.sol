@@ -16,5 +16,14 @@ contract powerToken is ERC20, Ownable {
     function burn(address _from, uint256 _amount) public {
         _burn(_from, _amount);
     }
+
+    function approve(address _spender, uint256 _amount) public override returns (bool) {
+        _approve(msg.sender, _spender, _amount);
+        return true;
+    }
+
+    function transferOwnership(address newOwner) public onlyOwner override{
+        _transferOwnership(newOwner);
+    }
 }
     
