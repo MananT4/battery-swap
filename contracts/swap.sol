@@ -62,19 +62,19 @@ contract swap is Ownable {
     _;
   }
 
-  //Constructor to deploy the contract with the token's address
-  constructor(address _tokenAddress) payable onlyOwner(){
-    swapOwner = payable(msg.sender); //Set the owner of the contract to the EOA that deployed the contract
-    contractAddress = payable(address(this));
-    token = powerToken(_tokenAddress); //Deploy the contract with the token's address
-  }
-
   //Modifier for reentrancy guard
   modifier reentrancyGuard() {
     require(!reentrancyLock, "Reentrancy guard");
     reentrancyLock = true;
     _;
     reentrancyLock = false;
+  }
+
+  //Constructor to deploy the contract with the token's address
+  constructor(address _tokenAddress) payable onlyOwner(){
+    swapOwner = payable(msg.sender); //Set the owner of the contract to the EOA that deployed the contract
+    contractAddress = payable(address(this));
+    token = powerToken(_tokenAddress); //Deploy the contract with the token's address
   }
 
   //Receive function to accept ether
