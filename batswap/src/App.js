@@ -162,7 +162,7 @@ function App() {
                 <div className="container">
                     <h2 className="title is-4">Buy Tokens</h2>
                     <div className="field">
-                        <label className="label">400 Wei for 1 PWT</label>
+                        <label className="label">400 Wei for 1 PWT (PowerToken)</label>
                         <div className="control">
                             <input className="input" type="text" value={tokenAmount} onChange={e => setTokenAmount(e.target.value)} placeholder="Wei" />
                         </div>

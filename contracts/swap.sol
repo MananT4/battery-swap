@@ -3,36 +3,9 @@ pragma solidity 0.8.19;
 
 import "./powerToken.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-/*Function Paramter Variables: _variableName
-*Everything else in camelCase: variableName,  functionName, contractName
-*Two blank lines before contracts
-*One blank line before functions
-*/
 
-//Use web3.js functions to interact with the contract: getAccount, getBalance, currentProvider, getBlock, getTransaction
-
-
-/*Order Layout for sol file:
-*SPDX-License-Identifier
-*pragma solidity
-*import statements
-*interfaces
-*libraries
-*contracts
-*/
-
-//Battery structure to maaintain the state of the battery: id, percent, lastUser, location (vehicle, batterystation)
 
 contract swap is Ownable {
-  /*Order Layout for contract:
-  *Type declarations
-  *State variables
-  *Events
-  *Errors
-  *Modifiers
-  *Methods
-  */
-
   bool private initialized = false; //Only used for init
   uint256 public nextBatteryId = 1; //Only used for init
   powerToken public token;
@@ -182,25 +155,14 @@ contract swap is Ownable {
     return token.totalSupply();
   }
 
-  //Approve the contract to spend tokens on user's behalf
-  function approveContract() public {
-    token.approve(address(this), getBalance(msg.sender));
-  }
-
   //Function to let contract owner to withdraw ether
-  function withdraw() public ownerOnly {
+  function withdraw() public ownerOnly reentrancyGuard(){
     uint amount = address(this).balance;
     require(amount > 0, "No Ether left to withdraw");
 
     (bool success, ) = msg.sender.call{value: amount}("");
     require(success, "Failed to send Ether");
     emit Withdraw(msg.sender, amount); //Emit an event to log the withdrawal of ether
-  }
-
-  //Function to pass ownership of the token to the contract
-  //Add this in test
-  function transferTokenOwnership() public onlyOwner {
-    token.transferOwnership(contractAddress);
   }
 
   // Function to initialize the contract
