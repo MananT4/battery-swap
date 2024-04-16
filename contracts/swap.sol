@@ -82,7 +82,7 @@ contract swap is Ownable {
   }
 
   //Receive function to accept ether
-  receive() external payable {
+  receive() external payable reentrancyGuard(){
     //Emit an event to log the amount of ether received
     emit Received(msg.sender, msg.value);
   }

@@ -1,5 +1,5 @@
-export const CONTRACT_ADDRESS = "0xaaFE07c373ea3611De677f658350554d0cfB5960";
-export const TOKEN_ADDRESS = "0xaD030c9Dbf8a869C66Cfe5Ba47Ebb31071020F7b";
+export const CONTRACT_ADDRESS = "0x98749134252c5e29EC64e9CBD5E00eF8A11628ED";
+export const TOKEN_ADDRESS = "0x94B5c89Ddaf529b6bca7E4B51041CC659B7c8Fa6";
 export const TOKEN_ABI = [
   {
     "inputs": [],
@@ -484,6 +484,25 @@ export const CONTRACT_ABI = [
     "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "Received",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
         "internalType": "address",
         "name": "owner",
@@ -767,21 +786,7 @@ export const CONTRACT_ABI = [
   },
   {
     "inputs": [],
-    "name": "approveContract",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "withdraw",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "transferTokenOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
